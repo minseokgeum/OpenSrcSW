@@ -26,7 +26,8 @@ public class MakeKeyword {
 
     public MakeKeyword(String file) {
         this.input_file = file;
-        this.output_file = input_file + "/index.xml";
+        this.output_file = file;
+        //this.output_file = file + "/index.xml";
     }
 
     //xml파일의 바디 태그의 내용을 형태소만 남기고 각 형태소의 등장횟수들로 내용을 수정한다.
@@ -35,7 +36,8 @@ public class MakeKeyword {
         //문서생성
         DocumentBuilderFactory docFac = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFac.newDocumentBuilder();
-        Document doc = docBuilder.parse(input_file+"/collection.xml");
+        Document doc = docBuilder.parse("./collection.xml");
+        //Document doc = docBuilder.parse(input_file+"/collection.xml");
 
         String bodyData = "";
         KeywordList kl;
@@ -51,8 +53,7 @@ public class MakeKeyword {
             bodyData = "";
             for (int j = 0; j < kl.size(); j++) {//분석된 형태소를 문자열로 가공
                 Keyword kwrd = kl.get(j);
-                bodyData = bodyData.concat(kwrd.getString() + ":" + kwrd.getCnt());
-                if(j!=kl.size()-1) bodyData = bodyData.concat("#");
+                bodyData = bodyData.concat("#"+kwrd.getString() + ":" + kwrd.getCnt());
             }
             nodes.item(0).setTextContent(bodyData);//최종 결과를 body의 내용으로 입력
         }

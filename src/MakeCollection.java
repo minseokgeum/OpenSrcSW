@@ -17,9 +17,10 @@ public class MakeCollection {
     private String data_path;
     private String output_file;
 
-    public MakeCollection(String path) {
+    public MakeCollection(String path, String output_path) {//path:읽어올 html 파일들이 존재하는 디렉토리, output_path:output될 파일을 저장할 디렉토리
         this.data_path = path;
-        this.output_file = data_path+"/collection.xml";
+        this.output_file = output_path;
+        //this.output_file = output_path+"/collection.xml";
     }
 
     private int _count = 0;

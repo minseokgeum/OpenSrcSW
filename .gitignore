@@ -1,5 +1,7 @@
 #files to ignore
 /.idea/
+/output_file/
 SimpleIR.iml
 *.class
 *.jar
+index.post
