@@ -4,7 +4,7 @@
 
 **KuIR.java**가 프로젝트의 메인 소스 코드로 사용되고,
 
-현재 4주차 **MakeCollection.java**, **MakeKeyword.java**, **Indexer.java** 파일을 메인 함수의 인자값(String[] args)에 따라 객체를 생성하고 함수를 실행합니다.
+현재 5주차 **MakeCollection.java**, **MakeKeyword.java**, **Indexer.java**, **Searcher.java** 파일을 메인 함수의 인자값(String[] args)에 따라 객체를 생성하고 함수를 실행합니다.
 
 ## 파일 구조
 
@@ -12,7 +12,7 @@
 ├── README.md
 ├── collection.xml
 ├── index.xml
-├── index.post(4주차 실행결과 미업로드)
+├── index.post
 ├── out
 │   └── production
 │       └── SimpleIR
@@ -26,7 +26,9 @@
 └── src
     ├── KuIR.java
     ├── MakeCollection.java
-    └── MakeKeyword.java
+    ├── MakeKeyword.java
+    ├── Indexer.java
+    └── Searcher.java
 ```
 
 ## 인코딩
@@ -59,6 +61,8 @@ ex) `javac -cp jars/jsoup-1.14.3.jar:jars/kkma-2.1.jar src/*.java -d out/product
 
 -c command) `java -cp ./jars/jsoup-1.14.3.jar:./jars/kkma-2.1.jar:out/production/SimpleIR KuIR -c ./collection.xml data`
 
--k command) `java -cp ./jars/jsoup-1.14.3.jar:./jars/kkma-2.1.jar:out/production/SimpleIR KuIR -c ./index.xml`
+-k command) `java -cp ./jars/jsoup-1.14.3.jar:./jars/kkma-2.1.jar:out/production/SimpleIR KuIR -k ./index.xml`
 
 -i command) `java -cp ./jars/jsoup-1.14.3.jar:./jars/kkma-2.1.jar:out/production/SimpleIR KuIR -i ./index.post`
+
+-s command) `java -cp ./jars/jsoup-1.14.3.jar:./jars/kkma-2.1.jar:out/production/SimpleIR KuIR -s ./index.post -q "Query"`
