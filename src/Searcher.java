@@ -148,8 +148,10 @@ public class Searcher {
             if(hashMap.containsKey(keywordOfQuery[i])){
                 String[] weightListOfQuery = ((String)hashMap.get(keywordOfQuery[i])).split(" ");//weightListOfQuery : 짝수 인덱스에는 id 값이, 짝수 인덱스 바로 다음에는 해당 id의 weight값이 저장되어있다.
                 for(int j = 0 ; j < weightListOfQuery.length ; j+=2){//현재 탐색하고 있는 Query의 키워드가 존재하는 id의 similarity에 해당 id에서의 weight값과 현재 키워드의 query에서의 tf값을 곱해서 더해준다.
-                    resultSimilarity[2*Integer.parseInt(weightListOfQuery[j])+1] += tfOfQuery[i]*Double.parseDouble(weightListOfQuery[j+1]);
-                    arrToSort[Integer.parseInt(weightListOfQuery[j])] += tfOfQuery[i]*Double.parseDouble(weightListOfQuery[j+1]);
+                    innerProduct(resultSimilarity, tfOfQuery, weightListOfQuery, i, j);
+                    innerProduct(arrToSort, tfOfQuery, weightListOfQuery, i, j);
+                    /*resultSimilarity[2*Integer.parseInt(weightListOfQuery[j])+1] += tfOfQuery[i]*Double.parseDouble(weightListOfQuery[j+1]);
+                    arrToSort[Integer.parseInt(weightListOfQuery[j])] += tfOfQuery[i]*Double.parseDouble(weightListOfQuery[j+1]);*/
                     lengthOfIdVector[Integer.parseInt(weightListOfQuery[j])] += Math.pow(Double.parseDouble(weightListOfQuery[j+1]),2);//벡터 크기 계산
                 }
             }
