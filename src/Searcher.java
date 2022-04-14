@@ -98,6 +98,13 @@ public class Searcher {
             System.out.println("검색된 문서가 없습니다.");
     }
 
+    private void innerProduct(double[] result, int[] tfOfQuery, String[] weightListOfQuery, int indexI, int indexJ){
+        if (result.length == numberOfDoc)
+            result[Integer.parseInt(weightListOfQuery[indexJ])] += tfOfQuery[indexI]*Double.parseDouble(weightListOfQuery[indexJ+1]);
+        else if(result.length == 2*numberOfDoc)
+            result[2*Integer.parseInt(weightListOfQuery[indexJ])+1] += tfOfQuery[indexI]*Double.parseDouble(weightListOfQuery[indexJ+1]);
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked", "nls"}) //경고무시
     public String[] calcSim() throws IOException, ClassNotFoundException, ParserConfigurationException, SAXException, XPathExpressionException {
         //id 갯수세기
@@ -107,7 +114,7 @@ public class Searcher {
         //Document doc = docBuilder.parse(input_file+"/index.xml");// id 갯수를 셀 index.xml 파일 열기
 
         XPath xpath = XPathFactory.newInstance().newXPath();
-        NodeList nodes = (NodeList)xpath.evaluate("//docs/doc", doc, XPathConstants.NODESET);
+        NodeList nodes = (NodeList) xpath.evaluate("//docs/doc", doc, XPathConstants.NODESET);
         numberOfDoc = nodes.getLength();
 
         //형태소 분석을 위한 객체 생성
@@ -123,7 +130,7 @@ public class Searcher {
         Object object = objectInputStream.readObject();
         objectInputStream.close();
 
-        HashMap hashMap = (HashMap)object;
+        HashMap hashMap = (HashMap) object;
 
         //calculate similarity
         String[] keywordOfQuery = new String[kl.size()];//Query의 키워드값들을 저장하는 배열
@@ -132,36 +139,36 @@ public class Searcher {
         double lengthOfQueryVector = 0;//Query의 벡터 크기 계산
         double[] lengthOfIdVector = new double[numberOfDoc];//Query의 각 키워드들에 대한 id 백터의 크기 계산
 
-        double[] resultSimilarity = new double[numberOfDoc*2];//짝수 인덱스에는 id 값이, 짝수 인덱스 바로 다음 인덱스에는 해당 id의 유사도 값이 저장되어있다.
+        double[] resultSimilarity = new double[numberOfDoc * 2];//짝수 인덱스에는 id 값이, 짝수 인덱스 바로 다음 인덱스에는 해당 id의 유사도 값이 저장되어있다.
         double[] arrToSort = new double[numberOfDoc];//정렬용 배열, 인덱스 값이 id 값이며, 배열에 저장된 값은 Query와의 similarity 계산결과이다.
 
-        for(int i = 0 ; i < numberOfDoc ; i++) // id값 저장
-            resultSimilarity[2*i] = i;
+        for (int i = 0; i < numberOfDoc; i++) // id값 저장
+            resultSimilarity[2 * i] = i;
 
         for (int i = 0; i < kl.size(); i++) {//Query의 각각의 키워드들에 대해 id 별 similarity를 계산한다.
             kwrd = kl.get(i);
             keywordOfQuery[i] = kwrd.getString();
             tfOfQuery[i] = kwrd.getCnt();
 
-            lengthOfQueryVector += Math.pow(tfOfQuery[i],2);
+            lengthOfQueryVector += Math.pow(tfOfQuery[i], 2);
 
-            if(hashMap.containsKey(keywordOfQuery[i])){
-                String[] weightListOfQuery = ((String)hashMap.get(keywordOfQuery[i])).split(" ");//weightListOfQuery : 짝수 인덱스에는 id 값이, 짝수 인덱스 바로 다음에는 해당 id의 weight값이 저장되어있다.
-                for(int j = 0 ; j < weightListOfQuery.length ; j+=2){//현재 탐색하고 있는 Query의 키워드가 존재하는 id의 similarity에 해당 id에서의 weight값과 현재 키워드의 query에서의 tf값을 곱해서 더해준다.
+            if (hashMap.containsKey(keywordOfQuery[i])) {
+                String[] weightListOfQuery = ((String) hashMap.get(keywordOfQuery[i])).split(" ");//weightListOfQuery : 짝수 인덱스에는 id 값이, 짝수 인덱스 바로 다음에는 해당 id의 weight값이 저장되어있다.
+                for (int j = 0; j < weightListOfQuery.length; j += 2) {//현재 탐색하고 있는 Query의 키워드가 존재하는 id의 similarity에 해당 id에서의 weight값과 현재 키워드의 query에서의 tf값을 곱해서 더해준다.
                     innerProduct(resultSimilarity, tfOfQuery, weightListOfQuery, i, j);
                     innerProduct(arrToSort, tfOfQuery, weightListOfQuery, i, j);
                     /*resultSimilarity[2*Integer.parseInt(weightListOfQuery[j])+1] += tfOfQuery[i]*Double.parseDouble(weightListOfQuery[j+1]);
                     arrToSort[Integer.parseInt(weightListOfQuery[j])] += tfOfQuery[i]*Double.parseDouble(weightListOfQuery[j+1]);*/
-                    lengthOfIdVector[Integer.parseInt(weightListOfQuery[j])] += Math.pow(Double.parseDouble(weightListOfQuery[j+1]),2);//벡터 크기 계산
+                    lengthOfIdVector[Integer.parseInt(weightListOfQuery[j])] += Math.pow(Double.parseDouble(weightListOfQuery[j + 1]), 2);//벡터 크기 계산
                 }
             }
-            if(i==kl.size()-1){
+            if (i == kl.size() - 1) {
                 lengthOfQueryVector = Math.sqrt(lengthOfQueryVector);
-                for(int j = 0 ; j < numberOfDoc ; j++) {
+                for (int j = 0; j < numberOfDoc; j++) {
                     lengthOfIdVector[j] = Math.sqrt(lengthOfIdVector[j]);
-                    if(resultSimilarity[2*j+1]!=0){
-                        resultSimilarity[2*j+1]/=lengthOfIdVector[j]*lengthOfQueryVector;
-                        arrToSort[j]/=lengthOfIdVector[j]*lengthOfQueryVector;
+                    if (resultSimilarity[2 * j + 1] != 0) {
+                        resultSimilarity[2 * j + 1] /= lengthOfIdVector[j] * lengthOfQueryVector;
+                        arrToSort[j] /= lengthOfIdVector[j] * lengthOfQueryVector;
                     }
                 }
             }
@@ -181,16 +188,16 @@ public class Searcher {
             System.out.println("id "+(int)resultSimilarity[i*2]+ " : " + String.format("%.2f", resultSimilarity[i*2+1]));
         System.out.println();*/
         ///////////////////////
-        mergeSort(arrToSort, resultSimilarity, 0, arrToSort.length-1);//정렬용 결과를 정렬하며, 최종 결과인 resultSimilarity 또한 동시에 내림차순으로 정렬을 한다. 이때 similarity id도 similarity와 함께 동시에 정렬된다.
+        mergeSort(arrToSort, resultSimilarity, 0, arrToSort.length - 1);//정렬용 결과를 정렬하며, 최종 결과인 resultSimilarity 또한 동시에 내림차순으로 정렬을 한다. 이때 similarity id도 similarity와 함께 동시에 정렬된다.
 
-        String[] resultString = new String[numberOfDoc*2];
+        String[] resultString = new String[numberOfDoc * 2];
 
-        for(int i = 0 ; i < numberOfDoc*2 ; i++){
-            if(i%2==0){
-                int id = (int)resultSimilarity[i];
+        for (int i = 0; i < numberOfDoc * 2; i++) {
+            if (i % 2 == 0) {
+                int id = (int) resultSimilarity[i];
                 nodes = (NodeList) xpath.evaluate("//docs/doc[@id = '" + id + "']/title", doc, XPathConstants.NODESET);
                 resultString[i] = nodes.item(0).getTextContent();
-            }else
+            } else
                 resultString[i] = String.format("%.2f", resultSimilarity[i]);
         }
         return resultString;
