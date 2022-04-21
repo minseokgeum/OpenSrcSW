@@ -26,6 +26,10 @@ public class KuIR {
             String query = args[3];
             Searcher searcher = new Searcher(path, query);
             searcher.printResult(searcher.calcSim());
+        } else if(command.equals("-m")) {
+            String query = args[2];
+            Midterm midterm = new Midterm(path, query);
+            midterm.printResult(midterm.showSnippet());
         }
     }
 }
