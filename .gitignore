@@ -1,6 +1,9 @@
 #files to ignore
+#simpleIR
 /.idea/
 /output_file/
 SimpleIR.iml
 *.class
 *.jar
+#python
+/python/.ipynb_checkpoints/
