@@ -7,3 +7,4 @@ SimpleIR.iml
 *.jar
 #python
 /python/.ipynb_checkpoints/
+/python/README.txt
