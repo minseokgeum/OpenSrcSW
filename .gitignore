@@ -8,3 +8,6 @@ SimpleIR.iml
 #python
 /python/.ipynb_checkpoints/
 /python/README.txt
+#OpenAPI
+/OpenAPI/OpenAPI/.idea/
+/OpenAPI/OpenAPI/OpenAPI.iml
